@@ -379,6 +379,22 @@ ngx_kafka_log_configure_kafka(ngx_pool_t *pool,
             conf_client_id_key,
             &conf->client_id);
 
+    ngx_kafka_log_kafka_conf_set_str(pool, conf->rkc,
+            conf_security_protocol_key,
+            &conf->security_protocol);
+    
+    ngx_kafka_log_kafka_conf_set_str(pool, conf->rkc,
+            conf_sasl_mechanisms_key,
+            &conf->sasl_mechanisms);
+
+    ngx_kafka_log_kafka_conf_set_str(pool, conf->rkc,
+            conf_sasl_password_key,
+            &conf->sasl_password);
+
+    ngx_kafka_log_kafka_conf_set_str(pool, conf->rkc,
+            conf_sasl_username_key,
+            &conf->sasl_username);
+    
     ngx_kafka_log_kafka_conf_set_int(pool, conf->rkc,
         conf_log_level_key,
         conf->log_level);
