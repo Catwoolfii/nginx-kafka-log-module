@@ -45,6 +45,10 @@ typedef struct {
     ngx_str_t        debug;                /* kafka list of debug contexts */
     ngx_str_t        brokers;              /* kafka list of brokers */
     ngx_str_t        client_id;            /* kafka client id */
+    ngx_str_t        security_protocol     /* protocol used to communicate with brokers */
+    ngx_str_t        sasl_mechanisms       /* SASL mechanism to use for authentication */
+    ngx_str_t        sasl_username         /* SASL username for use with the PLAIN and SASL-SCRAM-.. mechanisms */
+    ngx_str_t        sasl_password         /* SASL password for use with the PLAIN and SASL-SCRAM-.. mechanism */
     ngx_str_t        compression;          /* kafka communication compression */
     ngx_uint_t       log_level;            /* kafka client log level */
     ngx_uint_t       max_retries;          /* kafka client max retries */
