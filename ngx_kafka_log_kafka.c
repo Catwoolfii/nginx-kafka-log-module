@@ -257,18 +257,22 @@ ngx_kafka_log_init_kafka(
     ngx_pool_t *pool,
     ngx_kafka_log_main_kafka_conf_t *kafka)
 {
-    kafka->rk                  = NULL;
-    kafka->rkc                 = NULL;
+    kafka->rk                      = NULL;
+    kafka->rkc                     = NULL;
 
-    kafka->debug.data          = NULL;
-    kafka->brokers.data        = NULL;
-    kafka->client_id.data      = NULL;
-    kafka->compression.data    = NULL;
-    kafka->log_level           = NGX_CONF_UNSET_UINT;
-    kafka->max_retries         = NGX_CONF_UNSET_UINT;
-    kafka->buffer_max_messages = NGX_CONF_UNSET_UINT;
-    kafka->backoff_ms          = NGX_CONF_UNSET_UINT;
-    kafka->partition           = NGX_CONF_UNSET;
+    kafka->debug.data              = NULL;
+    kafka->brokers.data            = NULL;
+    kafka->client_id.data          = NULL;
+    kafka->security_protocol.data  = NULL;
+    kafka->sasl_mechanisms.data    = NULL;
+    kafka->sasl_username.data      = NULL;
+    kafka->sasl_password.data      = NULL;
+    kafka->compression.data        = NULL;
+    kafka->log_level               = NGX_CONF_UNSET_UINT;
+    kafka->max_retries             = NGX_CONF_UNSET_UINT;
+    kafka->buffer_max_messages     = NGX_CONF_UNSET_UINT;
+    kafka->backoff_ms              = NGX_CONF_UNSET_UINT;
+    kafka->partition               = NGX_CONF_UNSET;
 
     return NGX_OK;
 }
@@ -279,6 +283,10 @@ ngx_kafka_log_configure_kafka(ngx_pool_t *pool,
 
     /* configuration kafka constants */
     static const char *conf_client_id_key          = "client.id";
+    static const char *conf_security_protocol_key  = "security.protocol";
+    static const char *conf_sasl_mechanisms_key    = "sasl.mechanisms";
+    static const char *conf_sasl_username_key      = "sasl.username";
+    static const char *conf_sasl_password_key      = "sasl.password";
     static const char *conf_compression_codec_key  = "compression.codec";
     static const char *conf_log_level_key          = "log_level";
     static const char *conf_max_retries_key        = "message.send.max.retries";
@@ -288,9 +296,13 @@ ngx_kafka_log_configure_kafka(ngx_pool_t *pool,
     static const char *conf_debug_key              = "debug";
 
     /* - default values - */
-    static ngx_str_t  kafka_compression_default_value = ngx_string("snappy");
+    static ngx_str_t  kafka_compression_default_value = ngx_string("lz4");
     static ngx_str_t  kafka_client_id_default_value = ngx_string("nginx");
-    static ngx_int_t  kafka_log_level_default_value = 6;
+    static ngx_str_t  kafka_security_protocol_default_value = ngx_string("plaintext");
+    static ngx_str_t  kafka_sasl_mechanisms_default_value = ngx_string("GSSAPI");
+    static ngx_str_t  kafka_sasl_username_default_value = ngx_string("");
+    static ngx_str_t  kafka_sasl_password_default_value = ngx_string("");
+    static ngx_int_t  kafka_log_level_default_value = 5;
     static ngx_int_t  kafka_max_retries_default_value = 0;
     static ngx_int_t  kafka_buffer_max_messages_default_value = 100000;
     static ngx_msec_t kafka_backoff_ms_default_value = 10;
@@ -320,6 +332,22 @@ ngx_kafka_log_configure_kafka(ngx_pool_t *pool,
         conf->client_id = kafka_client_id_default_value;
     }
 
+    if (conf->security_protocol.data == NULL) {
+        conf->client_id = kafka_security_protocol_default_value;
+    }
+
+    if (conf->sasl_mechanisms.data == NULL) {
+        conf->client_id = kafka_sasl_mechanisms_default_value;
+    }
+
+    if (conf->sasl_username.data == NULL) {
+        conf->client_id = kafka_sasl_username_default_value;
+    }
+
+    if (conf->sasl_password.data == NULL) {
+        conf->client_id = kafka_sasl_password_default_value;
+    }
+    
     if (conf->log_level == NGX_CONF_UNSET_UINT) {
         conf->log_level = kafka_log_level_default_value;
     }
